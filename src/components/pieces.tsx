@@ -7,7 +7,7 @@ import { usePieceRefs } from '../context/board-refs-context/hooks';
 import Piece from './piece';
 import { useReversePiecePosition } from '../notation';
 
-import Xarrow from "react-xarrows";
+import Xarrow, {Xwrapper} from "react-xarrows";
 
 const Pieces = React.memo(() => {
   const board = useBoard();
@@ -30,21 +30,24 @@ const Pieces = React.memo(() => {
             });
 
             console.log("square", square)
-            pieceRef.current =  refs?.current?.[square] 
+            // pieceRef.current =  refs?.current?.[square] 
 
 
-            const id=`${piece.color}${piece.type}` 
 
-            const element = <Piece
-                // ref={refs?.current?.[square]}
-                ref = {pieceRef}
-                key={`${x}-${y}`}
-                id = {id}
-                // id={`${piece.color}${piece.type}` as const}
-                startPosition={{ x, y }}
-                square={square}
-                size={pieceSize}
-              />
+            const id=`${piece.color}${piece.type}` as const
+
+             (async ()=>{pieceRef.current = id})()
+
+            // const element = <Piece
+            //     // ref={refs?.current?.[square]}
+            //     ref = {pieceRef}
+            //     key={`${x}-${y}`}
+            //     id = {id}
+            //     // id={`${piece.color}${piece.type}` as const}
+            //     startPosition={{ x, y }}
+            //     square={square}
+            //     size={pieceSize}
+            //   />
 
             // if(pieceRef.current) {
             //   <Xarrow
@@ -65,8 +68,26 @@ const Pieces = React.memo(() => {
               //   square={square}
               //   size={pieceSize}
               // />
-              element
+              pieceRef.current && 
+              <Xwrapper>
+                <Piece
+                // ref={refs?.current?.[square]}
+                ref = {pieceRef}
+                key={`${x}-${y}`}
+                id = {id}
+                // id={`${piece.color}${piece.type}` as const}
+                startPosition={{ x, y }}
+                square={square}
+                size={pieceSize}/>
+                <Xarrow start={pieceRef.current} end={id}/>
+              </Xwrapper> 
+
+
             );
+
+
+
+            
           }
           return null;
         })
