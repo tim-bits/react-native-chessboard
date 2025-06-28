@@ -1,4 +1,5 @@
 import React, {useRef} from 'react';
+// import  {View} from 'react-native';
 import { useChessboardProps } from '../context/props-context/hooks';
 
 import { useBoard } from '../context/board-context/hooks';
@@ -37,7 +38,11 @@ const Pieces = React.memo(() => {
 
             const id=`${piece.color}${piece.type}` as const
 
-             (async ()=>{pieceRef.current = id})()
+            //  (async ()=>{pieceRef.current = id})()
+
+            if(square ==='h1') {
+              pieceRef.current = 'h1';
+            }
 
             // const element = <Piece
             //     // ref={refs?.current?.[square]}
@@ -69,8 +74,9 @@ const Pieces = React.memo(() => {
               //   square={square}
               //   size={pieceSize}
               // />
-              pieceRef.current && 
-              <Xwrapper>
+              <>
+              {pieceRef.current && 
+              <Xwrapper key={id}>
                 <Piece
                 ref={refs?.current?.[square]}
                 // ref = {pieceRef}
@@ -80,8 +86,21 @@ const Pieces = React.memo(() => {
                 startPosition={{ x, y }}
                 square={square}
                 size={pieceSize}/>
-                <Xarrow start={pieceRef.current} end={id}/>
-              </Xwrapper> 
+                <Xarrow start={pieceRef.current} end="a8"/>
+              </Xwrapper>}
+                          
+                          
+                {!pieceRef.current && 
+                <Piece
+                ref={refs?.current?.[square]}
+                // ref = {pieceRef}
+                key={`${x}-${y}`}
+                id = {id}
+                // id={`${piece.color}${piece.type}` as const}
+                startPosition={{ x, y }}
+                square={square}
+                size={pieceSize}/>}
+              </> 
 
 
             );
