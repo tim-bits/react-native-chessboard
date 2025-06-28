@@ -15,7 +15,8 @@ const Pieces = React.memo(() => {
   const { pieceSize } = useChessboardProps();
   const { toPosition } = useReversePiecePosition();
 
-  const pieceRef = useRef<string>(null);
+  // const pieceRef = useRef<string>(null);
+  const pieceRef:React.MutableRefObject<string | null> = useRef<string | null>(null);
 
   return (
     <>
@@ -71,8 +72,8 @@ const Pieces = React.memo(() => {
               pieceRef.current && 
               <Xwrapper>
                 <Piece
-                // ref={refs?.current?.[square]}
-                ref = {pieceRef}
+                ref={refs?.current?.[square]}
+                // ref = {pieceRef}
                 key={`${x}-${y}`}
                 id = {id}
                 // id={`${piece.color}${piece.type}` as const}
