@@ -1,5 +1,4 @@
 import React from 'react';
-import {View} from 'react-native';
 import { useChessboardProps } from '../context/props-context/hooks';
 
 import { useBoard } from '../context/board-context/hooks';
