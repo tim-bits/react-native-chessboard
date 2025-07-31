@@ -9,6 +9,7 @@ import Piece from './piece';
 import { useReversePiecePosition } from '../notation';
 
 import Xarrow, {Xwrapper} from "react-xarrows";
+import { PieceType } from 'src/types';
 
 const Pieces = React.memo(() => {
   const board = useBoard();
@@ -18,6 +19,7 @@ const Pieces = React.memo(() => {
 
   // const pieceRef = useRef<string>(null);
   const pieceRef:React.MutableRefObject<string | null> = useRef<string | null>(null);
+  const element:React.MutableRefObject<PieceType | null>= useRef<PieceType | null>(null);
 
   return (
     <>
@@ -40,21 +42,23 @@ const Pieces = React.memo(() => {
 
             //  (async ()=>{pieceRef.current = id})()
 
-            if(square ==='h1') {
-              pieceRef.current = 'h1';
+            // if(square ==='h1') {
+              // pieceRef.current = 'a8';
+            // }
+
+            if (element.current === null) {
+            element.current = <Piece
+                // ref={refs?.current?.[square]}
+                ref = {pieceRef}
+                key={`${x}-${y}`}
+                id = {id}
+                // id={`${piece.color}${piece.type}` as const}
+                startPosition={{ x, y }}
+                square={square}
+                size={pieceSize}
+              />
+              pieceRef.current = id;
             }
-
-            // const element = <Piece
-            //     // ref={refs?.current?.[square]}
-            //     ref = {pieceRef}
-            //     key={`${x}-${y}`}
-            //     id = {id}
-            //     // id={`${piece.color}${piece.type}` as const}
-            //     startPosition={{ x, y }}
-            //     square={square}
-            //     size={pieceSize}
-            //   />
-
             // if(pieceRef.current) {
             //   <Xarrow
             //     start={pieceRef} //can be react ref
@@ -75,22 +79,24 @@ const Pieces = React.memo(() => {
               //   size={pieceSize}
               // />
               <>
-              {pieceRef.current && 
+              {/* {pieceRef.current &&  */}
               <Xwrapper key={id}>
                 <Piece
                 ref={refs?.current?.[square]}
                 // ref = {pieceRef}
-                key={`${x}-${y}`}
+                key={`${x}-${y}` as const}
                 id = {id}
                 // id={`${piece.color}${piece.type}` as const}
                 startPosition={{ x, y }}
                 square={square}
                 size={pieceSize}/>
-                <Xarrow start={pieceRef.current} end="a8"/>
-              </Xwrapper>}
+                {element.current}
+                <Xarrow start={pieceRef.current} end={id}/>
+              </Xwrapper>
+              {/* } */}
                           
                           
-                {!pieceRef.current && 
+                {/* {!pieceRef.current && 
                 <Piece
                 ref={refs?.current?.[square]}
                 // ref = {pieceRef}
@@ -99,7 +105,7 @@ const Pieces = React.memo(() => {
                 // id={`${piece.color}${piece.type}` as const}
                 startPosition={{ x, y }}
                 square={square}
-                size={pieceSize}/>}
+                size={pieceSize}/>} */}
               </> 
 
 
