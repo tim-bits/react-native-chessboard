@@ -1,4 +1,5 @@
 import React from 'react';
+import {View} from 'react-native';
 import { useChessboardProps } from '../context/props-context/hooks';
 
 import { useBoard } from '../context/board-context/hooks';
@@ -21,14 +22,16 @@ const Pieces = React.memo(() => {
 
 // const boxStyle = {/*border: 'grey solid 2px',*/ borderRadius: '10px', padding: '5px'};
 
+// type Id = {id:string}
+
 const DraggableBox = ({id}:{id:string}) => {
     // const id = idx;
     const updateXarrow = useXarrow();
     return (
-        <Draggable id={id} onDrag={updateXarrow} onStop={updateXarrow}>
-            {/* <div id={id} style={boxStyle}> */}
-                {/* {id} */}
-            {/* </div> */}
+        <Draggable onDrag={updateXarrow} onStop={updateXarrow}>
+            <View id={id}>
+                {id}
+            </View>
         </Draggable>
     );
 };
