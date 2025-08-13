@@ -7,11 +7,25 @@ import { usePieceRefs } from '../context/board-refs-context/hooks';
 import Piece from './piece';
 import { useReversePiecePosition } from '../notation';
 
+import ArrowOverlay from './ArrowOverlay';
+// import { useBoardContext } from '../context/board-context'; 
+
+import { useBoardVisualWithArrows } from '../hooks/use-arrows';
+
+
+
 const Pieces = React.memo(() => {
   const board = useBoard();
   const refs = usePieceRefs();
   const { pieceSize } = useChessboardProps();
   const { toPosition } = useReversePiecePosition();
+
+  // const { boardSize, squareSize, orientation, arrows } = useBoardContext();
+
+
+  //  useContext(BoardRefsContextProvider
+
+const { boardSize, squareSize, orientation, arrows } = useBoardVisualWithArrows();
 
   return (
     <>
@@ -37,6 +51,15 @@ const Pieces = React.memo(() => {
           return null;
         })
       )}
+
+      <ArrowOverlay
+        arrows={arrows}
+        boardSize={boardSize}
+        squareSize={squareSize}
+        orientation={orientation}
+        color="rgba(0,128,255,0.6)"
+      />
+
     </>
   );
 });

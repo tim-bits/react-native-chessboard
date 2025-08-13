@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useImperativeHandle,
   useRef,
+  useState
 } from 'react';
 import {
   ChessboardState,
@@ -25,6 +26,11 @@ const SquareRefsContext = createContext<React.MutableRefObject<Record<
   React.MutableRefObject<HighlightedSquareRefType>
 > | null> | null>(null);
 
+
+export type ArrowPair = [Square, Square];
+
+const ArrowsContext = createContext<ArrowPair[] | null>(null);
+
 export type ChessboardRef = {
   undo: () => void;
   move: (_: {
@@ -35,6 +41,7 @@ export type ChessboardRef = {
   resetAllHighlightedSquares: () => void;
   resetBoard: (fen?: string) => void;
   getState: () => ChessboardState;
+  arrows: (arrows?: ArrowPair[]) => void;
 };
 
 const BoardRefsContextProviderComponent = React.forwardRef<
@@ -44,6 +51,9 @@ const BoardRefsContextProviderComponent = React.forwardRef<
   const chess = useChessEngine();
   const board = chess.board();
   const setBoard = useSetBoard();
+
+  const [arrowsState, setArrowsState] = useState<ArrowPair[]>([]);
+
 
   // There must be a better way of doing this.
   const generateBoardRefs = useCallback(() => {
@@ -108,6 +118,11 @@ const BoardRefsContextProviderComponent = React.forwardRef<
         if (fen) chess.load(fen);
         setBoard(chess.board());
       },
+      
+      arrows: (pairs: ArrowPair[] | undefined) => {
+        setArrowsState(pairs || []);
+      }
+
     }),
     [board, chess, setBoard]
   );
@@ -115,7 +130,9 @@ const BoardRefsContextProviderComponent = React.forwardRef<
   return (
     <PieceRefsContext.Provider value={pieceRefs}>
       <SquareRefsContext.Provider value={squareRefs}>
+        <ArrowsContext.Provider value={arrowsState}>
         {children}
+        </ArrowsContext.Provider>
       </SquareRefsContext.Provider>
     </PieceRefsContext.Provider>
   );
@@ -123,4 +140,4 @@ const BoardRefsContextProviderComponent = React.forwardRef<
 
 const BoardRefsContextProvider = React.memo(BoardRefsContextProviderComponent);
 
-export { PieceRefsContext, SquareRefsContext, BoardRefsContextProvider };
+export { PieceRefsContext, SquareRefsContext, BoardRefsContextProvider, ArrowsContext };

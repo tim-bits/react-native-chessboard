@@ -50,6 +50,7 @@ const ChessboardContainerComponent = React.forwardRef<
         chessboardRef.current?.resetAllHighlightedSquares(),
       getState: () => chessboardRef?.current?.getState() as ChessboardState,
       resetBoard: (params) => chessboardRef.current?.resetBoard(params),
+      arrows: (params) => chessboardRef.current?.arrows(params),
     }),
     []
   );
