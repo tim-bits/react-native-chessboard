@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { useChessboardProps } from '../context/props-context/hooks';
-import { ArrowsContext, ArrowPair } from '../context/board-refs-context';
+import { ArrowsContext } from '../context/board-refs-context';
+import type { ArrowPair} from '../context/board-refs-context';
 import { useChessEngine } from '../context/chess-engine-context/hooks';
 
 type Orientation = 'white' | 'black';

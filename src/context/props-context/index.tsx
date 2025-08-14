@@ -100,7 +100,7 @@ const ChessboardPropsContext = React.createContext<ChessboardContextType>(
   defaultChessboardProps
 );
 
-const ChessboardPropsContextProvider: React.FC<ChessboardProps> = React.memo(
+const ChessboardPropsContextProvider: React.FC<ChessboardProps & { children?: React.ReactNode }> = React.memo(
   ({ children, ...rest }) => {
     const value = useMemo(() => {
       const data = {

@@ -6,8 +6,11 @@ import React, {
   useRef,
   useState
 } from 'react';
-import {
+import type {
   ChessboardState,
+} from '../../helpers/get-chessboard-state';
+
+import {
   getChessboardState,
 } from '../../helpers/get-chessboard-state';
 import type { ChessPieceRef } from '../../components/piece';

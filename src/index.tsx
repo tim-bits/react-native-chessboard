@@ -7,10 +7,13 @@ import { Pieces } from './components/pieces';
 import { SuggestedDots } from './components/suggested-dots';
 import { ChessboardContextProvider } from './context/board-context-provider';
 import type { ChessboardRef } from './context/board-refs-context';
+import type {
+  ChessboardProps, 
+} from './context/props-context';
 import {
-  ChessboardProps,
   ChessboardPropsContextProvider,
 } from './context/props-context';
+
 import { useChessboardProps } from './context/props-context/hooks';
 import type { ChessboardState } from './helpers/get-chessboard-state';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
