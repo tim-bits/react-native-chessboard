@@ -37,7 +37,7 @@ const ArrowOverlay: React.FC<Props> = ({
   boardSize,
   squareSize,
   orientation = 'white',
-  color = 'rgba(242, 255, 0, 0.4)',
+  color = 'rgba(242, 255, 0, 0.5)',
     // color = 'rgba(255, 0, 43, 0.61)',
   borderColor = 'rgba(0,0,0,0.3)',
 }) => {
@@ -61,35 +61,55 @@ const ArrowOverlay: React.FC<Props> = ({
           const dx = end.x - start.x;
           const dy = end.y - start.y;
           const angle = Math.atan2(dy, dx);
-          const headLen = headLength*0.5;
-          const shaftEndX = end.x - headLen * Math.cos(angle);
-          const shaftEndY = end.y - headLen * Math.sin(angle);
+          // const headLen = headLength*0.5;
+          // const shaftEndX = end.x - headLen * Math.cos(angle);
+          // const shaftEndY = end.y - headLen * Math.sin(angle);
 
           // thickness falling with priority (0 is highest)
           const thickness = round(baseThickness * Math.pow(0.7, idx));
+
           const borderThickness = Math.max(1, Math.round(thickness * 0.1));
 
+          const headLen = Math.max(6, thickness * 1.5);   // arrowhead length
+          const headWidth = thickness * 2.5;         
+  
           // arrow head triangle points
-          const wingAngle = Math.PI / 6; // 30°
-          const p1x = end.x;
-          const p1y = end.y;
-          const p2x = end.x - headLen * Math.cos(angle - wingAngle);
-          const p2y = end.y - headLen * Math.sin(angle - wingAngle);
-          const p3x = end.x - headLen * Math.cos(angle + wingAngle);
-          const p3y = end.y - headLen * Math.sin(angle + wingAngle);
+          // const wingAngle = Math.PI / 6; // 30°
+          // const p1x = end.x;
+          // const p1y = end.y;
+          // const p2x = end.x - headLen * Math.cos(angle - wingAngle);
+          // const p2y = end.y - headLen * Math.sin(angle - wingAngle);
+          // const p3x = end.x - headLen * Math.cos(angle + wingAngle);
+          // const p3y = end.y - headLen * Math.sin(angle + wingAngle);
+
+                    
+          const shaftEndX = end.x - headLen * Math.cos(angle);
+          const shaftEndY = end.y - headLen * Math.sin(angle);
+
+
+          // arrowhead triangle (proportional)
+          const backX = end.x - headLen * Math.cos(angle);
+          const backY = end.y - headLen * Math.sin(angle);
+          const perpX = Math.cos(angle + Math.PI / 2) * (headWidth / 2);
+          const perpY = Math.sin(angle + Math.PI / 2) * (headWidth / 2);
+
+          const p1x = end.x, p1y = end.y;
+          const p2x = backX + perpX, p2y = backY + perpY;
+          const p3x = backX - perpX, p3y = backY - perpY;
 
           const linePath = `M ${start.x} ${start.y} L ${shaftEndX} ${shaftEndY}`;
+
 
           return (
             <React.Fragment key={`arrow-${from}-${to}-${idx}`}>
               {/* border stroke for shaft */}
-              <Path
+              {/* <Path
                 d={linePath}
                 stroke={borderColor}
                 strokeWidth={thickness + borderThickness * 2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-              />
+              /> */}
               {/* inner shaft */}
               <Path
                 d={linePath}
@@ -99,10 +119,10 @@ const ArrowOverlay: React.FC<Props> = ({
                 strokeLinejoin="round"
               />
               {/* border for head */}
-              <Polygon
+              {/* <Polygon
                 points={`${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y}`}
                 fill={borderColor}
-              />
+              /> */}
               {/* inner head */}
               <Polygon
                 points={`${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y}`}
