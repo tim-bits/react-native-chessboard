@@ -57,7 +57,7 @@ const { boardSize, squareSize, orientation, arrows } = useBoardVisualWithArrows(
         boardSize={boardSize}
         squareSize={squareSize}
         orientation={orientation}
-        color="rgba(0,128,255,0.6)"
+        // color="rgba(0,128,255,0.6)"
       />
 
     </>

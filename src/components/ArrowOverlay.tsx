@@ -37,17 +37,22 @@ const ArrowOverlay: React.FC<Props> = ({
   boardSize,
   squareSize,
   orientation = 'white',
-  color = 'rgba(0,128,255,0.7)',
+  color = 'rgba(242, 255, 0, 0.4)',
+    // color = 'rgba(255, 0, 43, 0.61)',
   borderColor = 'rgba(0,0,0,0.3)',
 }) => {
   if (!arrows || arrows.length === 0) return null;
 
-  const baseThickness = Math.max(1, squareSize * 0.15); // 15% of square height, clamp min 1px
-  const headLength = Math.max(8, squareSize * 0.22);    // arrowhead length in px
+  const baseThickness = Math.max(1, squareSize * 0.25); // 15% of square height, clamp min 1px
+  const headLength = Math.max(8, baseThickness*2);    // arrowhead length in px
 
   return (
-    <View style={{ position: 'absolute', left: 0, top: 0, width: boardSize, height: boardSize, zIndex: 50 }}>
-      <Svg width={boardSize} height={boardSize} viewBox={`0 0 ${boardSize} ${boardSize}`}>
+    <View pointerEvents="none" style={{ position: 'absolute', left: 0, top: 0, width: boardSize, height: boardSize, zIndex: 50 }}>
+      <Svg 
+        width={boardSize} 
+        height={boardSize} 
+        viewBox={`0 0 ${boardSize} ${boardSize}`}
+        >
         {arrows.map(([from, to], idx) => {
           const start = squareToCenter(from, squareSize, orientation);
           const end = squareToCenter(to, squareSize, orientation);
@@ -56,13 +61,13 @@ const ArrowOverlay: React.FC<Props> = ({
           const dx = end.x - start.x;
           const dy = end.y - start.y;
           const angle = Math.atan2(dy, dx);
-          const headLen = headLength;
+          const headLen = headLength*0.5;
           const shaftEndX = end.x - headLen * Math.cos(angle);
           const shaftEndY = end.y - headLen * Math.sin(angle);
 
           // thickness falling with priority (0 is highest)
           const thickness = round(baseThickness * Math.pow(0.7, idx));
-          const borderThickness = Math.max(1, Math.round(thickness * 0.6));
+          const borderThickness = Math.max(1, Math.round(thickness * 0.1));
 
           // arrow head triangle points
           const wingAngle = Math.PI / 6; // 30°
