@@ -37,7 +37,7 @@ const ArrowOverlay: React.FC<Props> = ({
   squareSize,
   orientation = 'white',
   color = 'rgba(242, 255, 0, 0.5)',
-  borderColor = 'rgba(0,0,0,0.3)',
+  // borderColor = 'rgba(0,0,0,0.3)',
   zIndex = 50,
 }) => {
   if (!arrows || arrows.length === 0) return null;

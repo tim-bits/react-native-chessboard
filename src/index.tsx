@@ -6,7 +6,7 @@ import { HighlightedSquares } from './components/highlighted-squares';
 import { Pieces } from './components/pieces';
 import { SuggestedDots } from './components/suggested-dots';
 import { ChessboardContextProvider } from './context/board-context-provider';
-import type { ChessboardRef } from './context/board-refs-context';
+import type { ChessboardRef, ArrowPair } from './context/board-refs-context';
 import type {
   ChessboardProps, 
 } from './context/props-context';
@@ -71,5 +71,5 @@ const ChessboardContainerComponent = React.forwardRef<
 
 const ChessboardContainer = React.memo(ChessboardContainerComponent);
 
-export type { ChessboardRef };
+export type { ChessboardRef, ArrowPair};
 export default ChessboardContainer;
