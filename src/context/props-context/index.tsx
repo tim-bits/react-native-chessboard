@@ -1,4 +1,4 @@
-import type { Move } from 'chess.js';
+import type { Move, Square } from 'chess.js';
 import React, { useMemo } from 'react';
 import { Dimensions } from 'react-native';
 import type { PieceType } from '../../types';
@@ -54,6 +54,19 @@ type ChessboardProps = {
    * It's a particularly useful callback if you want to execute an instruction after a move.
    */
   onMove?: (info: ChessMoveInfo) => void;
+
+  /** Fires just before the move animation starts (gesture or programmatic). */
+  onMoveStart?: (info: ChessMoveInfo & { move?: Move }) => void;
+
+  /** Fires after the move animation has completed. */
+  onMoveEnd?: (info: ChessMoveInfo & { move?: Move }) => void;
+
+  /**
+   * Fires when a drag begins (finger/mouse down on a piece).
+   * Useful to clear arrow overlays before any animation.
+   */
+  onDragStart?: (payload: { square: Square; state: ChessboardState }) => void;
+
   /**
    * Useful if you want to customise the default colors used in the chessboard.
    */

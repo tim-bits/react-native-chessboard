@@ -18,6 +18,10 @@ import type { HighlightedSquareRefType } from '../../components/highlighted-squa
 
 import { useChessEngine } from '../chess-engine-context/hooks';
 import { useSetBoard } from '../board-context/hooks';
+import { useChessboardProps } from '../props-context/hooks';
+
+// import type { ChessboardProps } from '../props-context';
+const { onMoveStart, onMoveEnd } = useChessboardProps();
 
 const PieceRefsContext = createContext<React.MutableRefObject<Record<
   Square,
@@ -89,9 +93,36 @@ const BoardRefsContextProviderComponent = React.forwardRef<
   useImperativeHandle(
     ref,
     () => ({
-      move: ({ from, to }) => {
-        return pieceRefs?.current?.[from].current?.moveTo?.(to);
-      },
+      // move: ({ from, to }) => {
+      //   console.log('move', from, to)
+      //   setArrowsState([])
+      //   return pieceRefs?.current?.[from].current?.moveTo?.(to);
+      // },
+
+    move: async ({ from, to }) => {
+      // Fire onMoveStart before animation
+      if (onMoveStart) {
+        try {
+          const stateBefore = getChessboardState(chess);
+          // We don’t yet have a chess.js Move object; provide {from,to} to the consumer
+          //  we pass a shape compatible with ChessMoveInfo.move where needed
+          onMoveStart({ move: { from, to } as any, state: { ...stateBefore, in_promotion: false } });
+        } catch {}
+      }
+
+      const result = await pieceRefs?.current?.[from]?.current?.moveTo?.(to);
+
+      // Fire onMoveEnd after animation completes
+      if (result && onMoveEnd) {
+        try {
+          const stateAfter = getChessboardState(chess);
+          onMoveEnd({ move: result, state: { ...stateAfter, in_promotion: false } });
+        } catch {}
+      }
+
+      return result;
+    },
+
       undo: () => {
         chess.undo();
         setBoard(chess.board());
@@ -127,7 +158,7 @@ const BoardRefsContextProviderComponent = React.forwardRef<
       }
 
     }),
-    [board, chess, setBoard]
+    [board, chess, setBoard, onMoveStart, onMoveEnd]
   );
 
   return (

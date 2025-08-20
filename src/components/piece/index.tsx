@@ -16,7 +16,11 @@ import { useChessEngine } from '../../context/chess-engine-context/hooks';
 import { useReversePiecePosition } from '../../notation';
 import type { PieceType, Vector } from '../../types';
 
+import { getChessboardState } from '../../helpers/get-chessboard-state';
+
+
 import { ChessPiece } from './visual-piece';
+
 
 type PieceProps = {
   id: PieceType;
@@ -41,6 +45,7 @@ const Piece = React.memo(
         useBoardOperations();
 
       const {
+        onDragStart,
         durations: { move: moveDuration },
         gestureEnabled: gestureEnabledFromChessboardProps,
       } = useChessboardProps();
@@ -198,6 +203,19 @@ const Piece = React.memo(
           offsetX.value = translateX.value;
           offsetY.value = translateY.value;
           runOnJS(handleOnBegin)();
+
+        // NEW: notify app code that a drag started (great place to clear arrows)
+        if (onDragStart) {
+          const state = getChessboardState(chess);
+          // Use runOnJS because we’re inside a Reanimated worklet
+        const currentSquare = toPosition({
+          x: translateX.value,
+          y: translateY.value,
+        });
+
+          runOnJS(onDragStart)({ square: currentSquare, state });
+        }
+
         })
         .onStart(() => {
           if (!gestureEnabled.value) return;
