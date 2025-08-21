@@ -2,6 +2,10 @@ import React, { memo } from 'react';
 import { View } from 'react-native';
 import Svg, { Path, Polygon } from 'react-native-svg';
 
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import { useContext } from 'react';
+import { ArrowsAnimContext } from '../context/board-refs-context';
+
 type ArrowPair = [string, string];
 type Orientation = 'white' | 'black';
 
@@ -40,22 +44,33 @@ const ArrowOverlay: React.FC<Props> = ({
   // borderColor = 'rgba(0,0,0,0.3)',
   zIndex = 50,
 }) => {
+
+
+const arrowsOpacity = useContext(ArrowsAnimContext);
+const animatedStyle = useAnimatedStyle(() => ({
+  opacity: arrowsOpacity ? arrowsOpacity.value : 1,
+}));
+
   if (!arrows || arrows.length === 0) return null;
 
   const baseThickness = Math.max(1, squareSize * 0.25);
 
   return (
-    <View
+    <Animated.View
       pointerEvents="none"
-      style={{
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        width: boardSize,
-        height: boardSize,
-        zIndex,
-      }}
-    >
+
+      style={[
+        {
+          // left: 0,
+          // top: 0,
+
+          position: 'absolute',
+          width: boardSize,
+          height: boardSize,
+          zIndex,
+        },
+        animatedStyle,
+      ]}>
       <Svg width={boardSize} height={boardSize} viewBox={`0 0 ${boardSize} ${boardSize}`}>
         {arrows.map(([from, to], idx) => {
           const start = squareToCenter(from, squareSize, orientation);
@@ -108,7 +123,7 @@ const ArrowOverlay: React.FC<Props> = ({
           );
         })}
       </Svg>
-    </View>
+    </Animated.View>
   );
 };
 

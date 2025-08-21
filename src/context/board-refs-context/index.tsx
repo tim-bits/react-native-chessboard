@@ -20,6 +20,9 @@ import { useChessEngine } from '../chess-engine-context/hooks';
 import { useSetBoard } from '../board-context/hooks';
 import { useChessboardProps } from '../props-context/hooks';
 
+import { useSharedValue } from 'react-native-reanimated';
+import type {SharedValue} from 'react-native-reanimated';
+
 // import type { ChessboardProps } from '../props-context';
 const { onMoveStart, onMoveEnd } = useChessboardProps();
 
@@ -37,6 +40,12 @@ const SquareRefsContext = createContext<React.MutableRefObject<Record<
 export type ArrowPair = [Square, Square];
 
 const ArrowsContext = createContext<ArrowPair[] | null>(null);
+
+export const ArrowsAnimContext = createContext<SharedValue<number> | null>(null);
+
+export const ArrowsDispatchContext = createContext<
+  ((arrows: ArrowPair[]) => void) | null
+>(null);
 
 export type ChessboardRef = {
   undo: () => void;
@@ -60,6 +69,7 @@ const BoardRefsContextProviderComponent = React.forwardRef<
   const setBoard = useSetBoard();
 
   const [arrowsState, setArrowsState] = useState<ArrowPair[]>([]);
+  const arrowsOpacity = useSharedValue(1);
 
 
   // There must be a better way of doing this.
@@ -110,6 +120,9 @@ const BoardRefsContextProviderComponent = React.forwardRef<
         } catch {}
       }
 
+      arrowsOpacity.value = 0;
+      setArrowsState([]);
+      
       const result = await pieceRefs?.current?.[from]?.current?.moveTo?.(to);
 
       // Fire onMoveEnd after animation completes
@@ -155,17 +168,22 @@ const BoardRefsContextProviderComponent = React.forwardRef<
       
       arrows: (pairs: ArrowPair[] | undefined) => {
         setArrowsState(pairs || []);
-      }
-
+      },
+      hideArrowsNow: () => { arrowsOpacity.value = 0; },
+      showArrowsNow: () => { arrowsOpacity.value = 1; },
     }),
-    [board, chess, setBoard, onMoveStart, onMoveEnd]
+    [board, chess, setBoard, onMoveStart, onMoveEnd, arrowsOpacity]
   );
 
   return (
     <PieceRefsContext.Provider value={pieceRefs}>
       <SquareRefsContext.Provider value={squareRefs}>
         <ArrowsContext.Provider value={arrowsState}>
-        {children}
+            <ArrowsAnimContext.Provider value={arrowsOpacity}>
+              <ArrowsDispatchContext.Provider value={setArrowsState}>
+                  {children}
+              </ArrowsDispatchContext.Provider>
+          </ArrowsAnimContext.Provider>
         </ArrowsContext.Provider>
       </SquareRefsContext.Provider>
     </PieceRefsContext.Provider>

@@ -1,5 +1,5 @@
 import type { Move, Square } from 'chess.js';
-import React, { useCallback, useImperativeHandle } from 'react';
+import React, { useCallback, useContext, useImperativeHandle,  } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -17,10 +17,9 @@ import { useReversePiecePosition } from '../../notation';
 import type { PieceType, Vector } from '../../types';
 
 import { getChessboardState } from '../../helpers/get-chessboard-state';
-
-
 import { ChessPiece } from './visual-piece';
 
+import { ArrowsAnimContext, ArrowsDispatchContext } from '../../context/board-refs-context';
 
 type PieceProps = {
   id: PieceType;
@@ -43,6 +42,9 @@ const Piece = React.memo(
       const { isPromoting } = useBoardPromotion();
       const { onSelectPiece, onMove, selectedSquare, turn } =
         useBoardOperations();
+
+      const arrowsOpacity = useContext(ArrowsAnimContext);
+      const setArrows = useContext(ArrowsDispatchContext);
 
       const {
         onDragStart,
@@ -204,7 +206,15 @@ const Piece = React.memo(
           offsetY.value = translateY.value;
           runOnJS(handleOnBegin)();
 
-        // NEW: notify app code that a drag started (great place to clear arrows)
+          if (arrowsOpacity) {
+            arrowsOpacity.value = 0;
+          }
+          // Clear the array ASAP on JS
+          if (setArrows) {
+            runOnJS(setArrows)([]);
+          }
+          
+        //notify app code that a drag started 
         if (onDragStart) {
           const state = getChessboardState(chess);
           // Use runOnJS because we’re inside a Reanimated worklet
@@ -234,6 +244,12 @@ const Piece = React.memo(
         })
         .onFinalize(() => {
           scale.value = withTiming(1);
+          
+            'worklet';
+            // Re-enable visibility for future arrows
+            if (arrowsOpacity) {
+              arrowsOpacity.value = 1;
+            }  
         });
 
       const style = useAnimatedStyle(() => {
