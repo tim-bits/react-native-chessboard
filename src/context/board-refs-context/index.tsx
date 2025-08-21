@@ -4,7 +4,8 @@ import React, {
   useCallback,
   useImperativeHandle,
   useRef,
-  useState
+  useState,
+  useContext
 } from 'react';
 import type {
   ChessboardState,
@@ -24,7 +25,7 @@ import { useSharedValue } from 'react-native-reanimated';
 import type {SharedValue} from 'react-native-reanimated';
 
 // import type { ChessboardProps } from '../props-context';
-const { onMoveStart, onMoveEnd } = useChessboardProps();
+// const { onMoveStart, onMoveEnd } = useChessboardProps();
 
 const PieceRefsContext = createContext<React.MutableRefObject<Record<
   Square,
@@ -39,13 +40,25 @@ const SquareRefsContext = createContext<React.MutableRefObject<Record<
 
 export type ArrowPair = [Square, Square];
 
-const ArrowsContext = createContext<ArrowPair[] | null>(null);
+interface ArrowsContextValue {
+  arrowsState: ArrowPair[];
+  setArrowsState: React.Dispatch<React.SetStateAction<ArrowPair[]>>;
+}
+
+// const ArrowsContext = createContext<ArrowPair[] | null>(null);
+const ArrowsContext = createContext<ArrowsContextValue | undefined>(undefined);
 
 export const ArrowsAnimContext = createContext<SharedValue<number> | null>(null);
 
-export const ArrowsDispatchContext = createContext<
-  ((arrows: ArrowPair[]) => void) | null
->(null);
+// export function useArrows() {
+//   const ctx = useContext(ArrowsContext);
+//   if (!ctx) throw new Error("useArrows must be used within ArrowsContextProvider");
+//   return ctx;
+// }
+
+// export const ArrowsDispatchContext = createContext<
+//   ((arrows: ArrowPair[]) => void) | null
+// >(null);
 
 export type ChessboardRef = {
   undo: () => void;
@@ -68,6 +81,7 @@ const BoardRefsContextProviderComponent = React.forwardRef<
   const board = chess.board();
   const setBoard = useSetBoard();
 
+  const { onMoveStart, onMoveEnd } = useChessboardProps();
   const [arrowsState, setArrowsState] = useState<ArrowPair[]>([]);
   const arrowsOpacity = useSharedValue(1);
 
@@ -178,11 +192,11 @@ const BoardRefsContextProviderComponent = React.forwardRef<
   return (
     <PieceRefsContext.Provider value={pieceRefs}>
       <SquareRefsContext.Provider value={squareRefs}>
-        <ArrowsContext.Provider value={arrowsState}>
+        <ArrowsContext.Provider value={{arrowsState, setArrowsState}}>
             <ArrowsAnimContext.Provider value={arrowsOpacity}>
-              <ArrowsDispatchContext.Provider value={setArrowsState}>
+              {/* <ArrowsDispatchContext.Provider value={setArrowsState}> */}
                   {children}
-              </ArrowsDispatchContext.Provider>
+              {/* </ArrowsDispatchContext.Provider> */}
           </ArrowsAnimContext.Provider>
         </ArrowsContext.Provider>
       </SquareRefsContext.Provider>

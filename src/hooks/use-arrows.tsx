@@ -15,7 +15,7 @@ export type VisualWithArrows = {
 
 export const useBoardVisualWithArrows = (): VisualWithArrows => {
   const props = useChessboardProps();
-  const arrows = useContext(ArrowsContext) || [];
+  const {arrowsState: arrows} = useContext(ArrowsContext);
   const chess = useChessEngine();
   const turn = chess?.turn?.(); // 'w' | 'b'
   const orientation: Orientation = turn === 'b' ? 'black' : 'white';

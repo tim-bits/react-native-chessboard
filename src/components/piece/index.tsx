@@ -19,7 +19,8 @@ import type { PieceType, Vector } from '../../types';
 import { getChessboardState } from '../../helpers/get-chessboard-state';
 import { ChessPiece } from './visual-piece';
 
-import { ArrowsAnimContext, ArrowsDispatchContext } from '../../context/board-refs-context';
+// import { ArrowsAnimContext, ArrowsDispatchContext } from '../../context/board-refs-context';
+import { ArrowsAnimContext, ArrowsContext } from '../../context/board-refs-context';
 
 type PieceProps = {
   id: PieceType;
@@ -44,7 +45,8 @@ const Piece = React.memo(
         useBoardOperations();
 
       const arrowsOpacity = useContext(ArrowsAnimContext);
-      const setArrows = useContext(ArrowsDispatchContext);
+      const {setArrowsState} = useContext(ArrowsContext);
+      // const { arrows, setArrows } = useArrows();
 
       const {
         onDragStart,
@@ -210,8 +212,8 @@ const Piece = React.memo(
             arrowsOpacity.value = 0;
           }
           // Clear the array ASAP on JS
-          if (setArrows) {
-            runOnJS(setArrows)([]);
+          if (setArrowsState) {
+            runOnJS(setArrowsState)([]);
           }
           
         //notify app code that a drag started 
