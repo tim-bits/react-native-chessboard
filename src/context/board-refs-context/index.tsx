@@ -21,7 +21,7 @@ import { useChessEngine } from '../chess-engine-context/hooks';
 import { useSetBoard } from '../board-context/hooks';
 import { useChessboardProps } from '../props-context/hooks';
 
-import { useSharedValue } from 'react-native-reanimated';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
 import type {SharedValue} from 'react-native-reanimated';
 
 // import type { ChessboardProps } from '../props-context';
@@ -134,21 +134,29 @@ const BoardRefsContextProviderComponent = React.forwardRef<
         } catch {}
       }
 
-      arrowsOpacity.value = 0;
-      setArrowsState([]);
+      // arrowsOpacity.value = 0;
+      // setArrowsState([]);
       
       const result = await pieceRefs?.current?.[from]?.current?.moveTo?.(to);
 
-      // Fire onMoveEnd after animation completes
-      if (result && onMoveEnd) {
-        try {
-          const stateAfter = getChessboardState(chess);
-          onMoveEnd({ move: result, state: { ...stateAfter, in_promotion: false } });
-        } catch {}
-      }
+      if (result) {
+          // ✅ Valid move only: hide then clear arrows
+          // quick fade-out (won’t read `.value` in render)
+          arrowsOpacity.value = withTiming(0, { duration: 80 });
+          setArrowsState([]); // clear the data
+          // restore opacity so programmatic arrows show immediately later
+          arrowsOpacity.value = withTiming(1, { duration: 0, delay: 90 });
 
-      return result;
-    },
+          if (onMoveEnd) {
+            try {
+              const stateAfter = getChessboardState(chess);
+              onMoveEnd({ move: result, state: { ...stateAfter, in_promotion: false } });
+            } catch {}
+          }
+        }
+        // ❌ On illegal move: do nothing to arrows—leave them as they were.
+        return result;
+      },
 
       undo: () => {
         chess.undo();
@@ -180,13 +188,23 @@ const BoardRefsContextProviderComponent = React.forwardRef<
         setBoard(chess.board());
       },
       
-      arrows: (pairs: ArrowPair[] | undefined) => {
+      // arrows: (pairs: ArrowPair[] | undefined) => {
+      //   setArrowsState(pairs || []);
+      // },
+
+      arrows: (pairs?: ArrowPair[]) => {
+        // FACT: Make arrows appear reliably even after a move animation:
         setArrowsState(pairs || []);
+        if (pairs && pairs.length > 0) {
+          // ensure visible when caller sets new arrows
+          arrowsOpacity.value = withTiming(1, { duration: 0 });
+        }
       },
-      hideArrowsNow: () => { arrowsOpacity.value = 0; },
-      showArrowsNow: () => { arrowsOpacity.value = 1; },
+
+      // hideArrowsNow: () => { arrowsOpacity.value = 0; },
+      // showArrowsNow: () => { arrowsOpacity.value = 1; },
     }),
-    [board, chess, setBoard, onMoveStart, onMoveEnd, arrowsOpacity]
+    [board, chess, setBoard, onMoveStart, onMoveEnd, arrowsOpacity, arrowsState]
   );
 
   return (

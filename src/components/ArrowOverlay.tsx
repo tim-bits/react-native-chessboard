@@ -47,9 +47,12 @@ const ArrowOverlay: React.FC<Props> = ({
 
 
 const arrowsOpacity = useContext(ArrowsAnimContext);
-const animatedStyle = useAnimatedStyle(() => ({
-  opacity: arrowsOpacity ? arrowsOpacity.value : 1,
-}));
+// const animatedStyle = useAnimatedStyle(() => ({
+//   opacity: arrowsOpacity ? arrowsOpacity.value : 1,
+// }));
+  const animatedStyle = useAnimatedStyle(() => {
+    return { opacity: arrowsOpacity ? arrowsOpacity.value : 1 };
+  }, [arrowsOpacity]);
 
   if (!arrows || arrows.length === 0) return null;
 
@@ -63,7 +66,6 @@ const animatedStyle = useAnimatedStyle(() => ({
         {
           // left: 0,
           // top: 0,
-
           position: 'absolute',
           width: boardSize,
           height: boardSize,
