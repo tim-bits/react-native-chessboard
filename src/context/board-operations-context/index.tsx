@@ -226,7 +226,7 @@ const BoardOperationsContextProviderComponent = React.forwardRef<
       }
       return false;
     },
-    [controller, selectedSquare.value]
+    [controller, selectedSquare]
   );
 
   const value = useMemo(() => {

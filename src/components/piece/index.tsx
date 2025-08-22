@@ -124,7 +124,7 @@ const Piece = React.memo(
           const from = toPosition({ x: offsetX.value, y: offsetY.value });
           moveTo(from, to);
         },
-        [moveTo, offsetX.value, offsetY.value, toPosition]
+        [moveTo, offsetX, offsetY, toPosition]
       );
 
       useImperativeHandle(
@@ -180,15 +180,15 @@ const Piece = React.memo(
         scale.value = withTiming(1.2);
         onStartTap(square);
       }, [
-        gestureEnabled.value,
+        gestureEnabled,
         globalMoveTo,
         onStartTap,
         scale,
-        selectedSquare.value,
+        selectedSquare,
         square,
         toPosition,
-        translateX.value,
-        translateY.value,
+        translateX,
+        translateY,
         validateMove,
       ]);
 

@@ -36,7 +36,7 @@ const PlaceholderDot: React.FC<PlaceholderDotProps> = React.memo(
           .map((square) => square.includes(currentSquare))
           .filter((v) => v).length > 0
       );
-    }, [currentSquare, selectableSquares.value]);
+    }, [currentSquare, selectableSquares]);
 
     const rPlaceholderStyle = useAnimatedStyle(() => {
       const canBeSelected = isSelectable.value;
