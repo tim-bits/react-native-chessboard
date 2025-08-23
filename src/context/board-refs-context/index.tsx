@@ -19,6 +19,21 @@ import type { HighlightedSquareRefType } from '../../components/highlighted-squa
 import { useChessEngine } from '../chess-engine-context/hooks';
 import { useSetBoard } from '../board-context/hooks';
 
+import { Platform } from 'react-native';
+
+// Web-only: get ReactDOM.flushSync if available
+let flushSync: ((cb: () => void) => void) | null = null;
+// if (typeof window !== 'undefined' && Platform.OS === 'web') {
+if (Platform.OS === 'web') {  
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    flushSync = require('react-dom').flushSync;
+  } catch {
+    flushSync = null;
+  }
+}
+
+
 const PieceRefsContext = createContext<React.MutableRefObject<Record<
   Square,
   React.MutableRefObject<ChessPieceRef>
@@ -91,6 +106,10 @@ const BoardRefsContextProviderComponent = React.forwardRef<
     () => ({
       move: ({ from, to }) => {
         // setArrowsState([])
+      if (Platform.OS === 'web' && flushSync) {
+        flushSync(() => setArrowsState([]));
+      }
+
         return pieceRefs?.current?.[from].current?.moveTo?.(to);
       },
       undo: () => {
@@ -123,8 +142,18 @@ const BoardRefsContextProviderComponent = React.forwardRef<
         setBoard(chess.board());
       },
       
+      // arrows: (pairs: ArrowPair[] | undefined) => {
+      //   setArrowsState(pairs || []);
+      // }
+
       arrows: (pairs: ArrowPair[] | undefined) => {
-        setArrowsState(pairs || []);
+        const next = pairs || [];
+        if (Platform.OS === 'web' && next.length === 0 && flushSync) {
+          // synchronous clear on web so no stale arrows can render under new orientation
+          flushSync(() => setArrowsState([]));
+        } else {
+          setArrowsState(next);
+        }
       }
 
     }),
