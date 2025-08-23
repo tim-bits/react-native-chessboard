@@ -62,6 +62,12 @@ type ChessboardProps = {
    * Useful if you want to customise the default durations used in the chessboard (in milliseconds).
    */
   durations?: ChessboardDurationsType;
+
+  /**
+   * Whether arrows should automatically disappear after every successful move
+   * (both programmatic and user-driven). Defaults to true.
+   */
+  clearArrowsOnMove?: boolean;
 };
 
 type ChessboardContextType = ChessboardProps &
@@ -94,6 +100,7 @@ const defaultChessboardProps: ChessboardContextType = {
   withNumbers: true,
   boardSize: DEFAULT_BOARD_SIZE,
   pieceSize: DEFAULT_BOARD_SIZE / 8,
+  clearArrowsOnMove: true,
 };
 
 const ChessboardPropsContext = React.createContext<ChessboardContextType>(

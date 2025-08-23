@@ -54,6 +54,9 @@ const BoardOperationsContextProviderComponent = React.forwardRef<
 
   const turn = useSharedValue(chess.turn());
 
+  const { clearArrowsOnMove = true } = useChessboardProps();
+  const clearArrows = () => controller?.arrows?.([]);
+
   useImperativeHandle(
     ref,
     () => ({
@@ -118,6 +121,8 @@ const BoardOperationsContextProviderComponent = React.forwardRef<
 
       if (move == null) return;
 
+      if (clearArrowsOnMove) clearArrows(); 
+
       const isCheckmate = chess.in_checkmate();
 
       if (isCheckmate) {
@@ -139,6 +144,7 @@ const BoardOperationsContextProviderComponent = React.forwardRef<
     [
       checkmateHighlight,
       chess,
+      clearArrowsOnMove,
       controller,
       findKing,
       onChessboardMoveCallback,
@@ -221,12 +227,13 @@ const BoardOperationsContextProviderComponent = React.forwardRef<
   const moveTo = useCallback(
     (to: Square) => {
       if (selectedSquare.value != null) {
+        if (clearArrowsOnMove) clearArrows();
         controller?.move({ from: selectedSquare.value, to: to });
         return true;
       }
       return false;
     },
-    [controller, selectedSquare.value]
+    [clearArrowsOnMove, controller, selectedSquare.value]
   );
 
   const value = useMemo(() => {

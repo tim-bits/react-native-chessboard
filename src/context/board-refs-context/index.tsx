@@ -90,6 +90,7 @@ const BoardRefsContextProviderComponent = React.forwardRef<
     ref,
     () => ({
       move: ({ from, to }) => {
+        // setArrowsState([])
         return pieceRefs?.current?.[from].current?.moveTo?.(to);
       },
       undo: () => {
