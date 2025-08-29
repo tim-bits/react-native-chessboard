@@ -1,0 +1,6 @@
+{
+"name":"rnc",
+  "main": "src/index",
+  "module": "src/index",
+  "react-native": "src/index"
+}
