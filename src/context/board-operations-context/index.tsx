@@ -19,12 +19,14 @@ import { useChessEngine } from '../chess-engine-context/hooks';
 import { useChessboardProps } from '../props-context/hooks';
 
 type BoardOperationsContextType = {
-  selectableSquares: Animated.SharedValue<Square[]>;
+  // selectableSquares: Animated.SharedValue<Square[]>;
+  selectableSquares: SharedValue<Square[]>;
   onMove: (from: Square, to: Square) => void;
   onSelectPiece: (square: Square) => void;
   moveTo: (to: Square) => void;
   isPromoting: (from: Square, to: Square) => boolean;
-  selectedSquare: Animated.SharedValue<Square | null>;
+  // selectedSquare: Animated.SharedValue<Square | null>;
+  selectedSquare: SharedValue<Square | null>;
   // turn: Animated.SharedValue<'w' | 'b'>;
   turn: SharedValue<'w' | 'b'>;
 };
