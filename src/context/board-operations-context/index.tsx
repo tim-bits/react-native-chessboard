@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import type Animated from 'react-native-reanimated';
 import { useSharedValue } from 'react-native-reanimated';
+import type { SharedValue } from 'react-native-reanimated';
 import { getChessboardState } from '../../helpers/get-chessboard-state';
 
 import { useReversePiecePosition } from '../../notation';
@@ -24,7 +25,8 @@ type BoardOperationsContextType = {
   moveTo: (to: Square) => void;
   isPromoting: (from: Square, to: Square) => boolean;
   selectedSquare: Animated.SharedValue<Square | null>;
-  turn: Animated.SharedValue<'w' | 'b'>;
+  // turn: Animated.SharedValue<'w' | 'b'>;
+  turn: SharedValue<'w' | 'b'>;
 };
 
 const BoardOperationsContext = createContext<BoardOperationsContextType>(
