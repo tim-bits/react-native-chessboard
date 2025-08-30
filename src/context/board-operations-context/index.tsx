@@ -5,7 +5,7 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from 'react';
-import type Animated from 'react-native-reanimated';
+// import type Animated from 'react-native-reanimated';
 import { useSharedValue } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 import { getChessboardState } from '../../helpers/get-chessboard-state';
