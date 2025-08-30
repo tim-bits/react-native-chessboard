@@ -12,7 +12,7 @@ type Props = {
   orientation?: Orientation;          // default 'white'
   color?: string;                     // fill color
   borderColor?: string;
-  zIndex?: number;
+  // zIndex?: number;
 };
 
 const round = (n: number) => Math.round(n * 10) / 10;
@@ -38,7 +38,7 @@ const ArrowOverlay: React.FC<Props> = ({
   orientation = 'white',
   color = 'rgba(242, 255, 0, 0.5)',
   // borderColor = 'rgba(0,0,0,0.3)',
-  zIndex = 50,
+  // zIndex = 50,
 }) => {
   if (!arrows || arrows.length === 0) return null;
 
@@ -53,7 +53,7 @@ const ArrowOverlay: React.FC<Props> = ({
         top: 0,
         width: boardSize,
         height: boardSize,
-        zIndex,
+        // zIndex,
       }}
     >
       <Svg width={boardSize} height={boardSize} viewBox={`0 0 ${boardSize} ${boardSize}`}>
