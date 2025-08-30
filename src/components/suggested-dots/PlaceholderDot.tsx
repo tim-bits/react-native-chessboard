@@ -16,7 +16,6 @@ import { useReversePiecePosition } from '../../notation';
 type PlaceholderDotProps = {
   x: number;
   y: number;
-  // selectableSquares: Animated.SharedValue<Square[]>;
   selectableSquares: SharedValue<Square[]>;
   moveTo?: (to: Square) => void;
 };

@@ -5,7 +5,6 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from 'react';
-// import type Animated from 'react-native-reanimated';
 import { useSharedValue } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 import { getChessboardState } from '../../helpers/get-chessboard-state';
@@ -19,15 +18,12 @@ import { useChessEngine } from '../chess-engine-context/hooks';
 import { useChessboardProps } from '../props-context/hooks';
 
 type BoardOperationsContextType = {
-  // selectableSquares: Animated.SharedValue<Square[]>;
   selectableSquares: SharedValue<Square[]>;
   onMove: (from: Square, to: Square) => void;
   onSelectPiece: (square: Square) => void;
   moveTo: (to: Square) => void;
   isPromoting: (from: Square, to: Square) => boolean;
-  // selectedSquare: Animated.SharedValue<Square | null>;
   selectedSquare: SharedValue<Square | null>;
-  // turn: Animated.SharedValue<'w' | 'b'>;
   turn: SharedValue<'w' | 'b'>;
 };
 
